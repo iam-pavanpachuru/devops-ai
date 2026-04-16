@@ -55,6 +55,8 @@ User Input
    ↓
 AI Agent (LangGraph ReAct)
    ↓
+Gemini (LLM - reasoning & decision making)
+   ↓
 Tools Layer
    ├── MCP GitHub Server (@modelcontextprotocol/server-github)
    └── Custom Tools (delete_repository)
