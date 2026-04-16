@@ -1,35 +1,50 @@
-## 👨‍💻 Author
-
-**Pavan Kalyan Pachuru**
-
-* GitHub: https://github.com/iam-pavanpachuru
-* LinkedIn: https://www.linkedin.com/in/pavan-kalyan-pachuru-538a4016b
-
----
-
 # 🚀 GitHub AI DevOps Agent (MCP + Gemini)
 
 An AI-powered DevOps assistant that interacts with GitHub using natural language.
 
 Built using:
-
-* LangChain + LangGraph
-* Google Gemini API
-* Model Context Protocol (MCP)
-* Custom GitHub tools
+- LangChain + LangGraph
+- Google Gemini API
+- Model Context Protocol (MCP)
+- Custom GitHub tools
 
 ---
 
 ## ✨ Features
 
-* 🧠 Supports natural language prompts (English)
-* 📦 Create public/private repositories
-* 🌿 Create branches
-* 📄 Add README files
-* 🔍 List branches & repository details
-* 🗑️ Delete repositories (custom tool with safety confirmation)
-* 🔁 Model fallback + retry logic
-* 🔐 Safe execution (confirmation before destructive actions)
+- 🧠 Supports natural language prompts (English)
+- 📦 Create public/private repositories
+- 🌿 Create branches
+- 📄 Create/update files (README, etc.)
+- 🔍 List repositories, branches, commits
+- 🐛 Create issues & PRs
+- 💬 Comment on issues
+- 🗑️ Delete repositories (custom tool with safety confirmation)
+- 🔁 Retry & fallback logic
+- 🔐 Safe execution for destructive actions
+
+---
+
+## ✨ What This Project Does
+
+Control GitHub like this:
+
+```
+"Create a branch named feat/aiagent-test in your repository (replace <reponame> with your repo name)"
+```
+
+Example:
+
+```
+Create a branch named feat/aiagent-test in ai-devops-demo
+```
+
+The agent will:
+- Understand your intent
+- Select the correct GitHub tool
+- Execute it automatically
+
+No GitHub API knowledge required.
 
 ---
 
@@ -41,7 +56,7 @@ User Input
 AI Agent (LangGraph ReAct)
    ↓
 Tools Layer
-   ├── MCP GitHub Tools (via @modelcontextprotocol/server-github)
+   ├── MCP GitHub Server (@modelcontextprotocol/server-github)
    └── Custom Tools (delete_repository)
    ↓
 GitHub API
@@ -49,60 +64,64 @@ GitHub API
 
 ---
 
-## ⚙️ Setup
+# 🧑‍💻 One-Time Setup (New Laptop Friendly)
 
-## 🔑 Prerequisites
-
-Before running this project, you need to generate the following:
-
-### 1. Google Gemini API Key
-
-* Go to: https://aistudio.google.com
-* Sign in with your Google account
-* Click **Get API Key** → **Create API key**
-* Copy the key
+Follow these steps exactly — after this, the project will run without issues.
 
 ---
 
-### 2. GitHub Personal Access Token (PAT)
+## 1️⃣ Install System Dependencies
 
-* Go to: https://github.com/settings/tokens
-* Click **Generate new token (classic)**
-* Select the following permissions:
+### Install Python (>= 3.10)
 
-  * ✅ `repo` (full control of repositories)
-* Generate and copy the token
+```bash
+python --version
+```
 
----
-
-### 3. Your GitHub Username
-
-* Your GitHub profile username
-  Example:
-
-  ```
-  iam-pavanpachuru
-  ```
+If not installed → https://python.org
 
 ---
 
-## ⚙️ Configure Environment Variables
+### Install Node.js (Required for MCP)
 
-Update your `.env` file:
+Download: https://nodejs.org
 
-```env
-GOOGLE_API_KEY=your_gemini_api_key
-GITHUB_PERSONAL_ACCESS_TOKEN=your_github_token
-GITHUB_USERNAME=your_username
+```bash
+node -v
+npm -v
 ```
 
 ---
 
-⚠️ Never commit your `.env` file to GitHub. Add it to `.gitignore`.
+### Install Git
+
+```bash
+git --version
+```
 
 ---
 
-### 1. Clone repo
+## 2️⃣ Get Required Credentials
+
+### Gemini API Key
+- https://aistudio.google.com → Create API key
+
+### GitHub Personal Access Token
+Scopes required:
+- repo
+- workflow
+- read:org
+
+### GitHub Username
+
+Example:
+```
+iam-pavanpachuru
+```
+
+---
+
+## 3️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/iam-pavanpachuru/github-ai-agent
@@ -111,32 +130,153 @@ cd github-ai-agent
 
 ---
 
-### 2. Create virtual environment
+## 4️⃣ Create Virtual Environment
 
 ```bash
 python -m venv venv
+```
+
+Activate:
+
+Linux / Mac
+```bash
 source venv/bin/activate
+```
+
+Windows
+```bash
+venv\\Scripts\\activate
 ```
 
 ---
 
-### 3. Install dependencies
+## 5️⃣ Install Python Dependencies
 
 ```bash
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
 ---
 
-## 🚀 Usage
+## 6️⃣ Setup MCP (Node Environment)
 
-Run the agent:
+### Fix npm permissions (Linux/Mac)
+
+```bash
+mkdir -p ~/.npm-global
+npm config set prefix ~/.npm-global
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+### Install MCP Server
+
+```bash
+npm install -g @modelcontextprotocol/server-github
+```
+
+---
+
+### Verify MCP Works
+
+```bash
+npx @modelcontextprotocol/server-github
+```
+
+Expected:
+```
+GitHub MCP Server running on stdio
+```
+
+---
+
+## 7️⃣ Configure Environment Variables
+
+Create `.env` file:
+
+```env
+GOOGLE_API_KEY=your_gemini_api_key
+GITHUB_PERSONAL_ACCESS_TOKEN=your_github_token
+GITHUB_USERNAME=your_github_username  # e.g., iam-pavanpachuru
+```
+
+Protect it:
+
+```bash
+echo ".env" >> .gitignore
+```
+
+---
+
+## 🔌 MCP Usage Modes (Important)
+
+### ✅ Recommended — Auto Mode
+
+- Python reads `.env`
+- Passes token to MCP internally
+- No manual setup required
+
+---
+
+### ⚙️ Manual Mode
+
+```bash
+export GITHUB_PERSONAL_ACCESS_TOKEN=your_token
+npx @modelcontextprotocol/server-github
+```
+
+---
+
+## 🚀 Run the Project
 
 ```bash
 python github_ai_agent.py
 ```
 
-Type your task and press **ENTER twice** to execute.
+Type your task and press ENTER twice.
+
+---
+
+## 🧪 Validate Setup (Important)
+
+Before running real tasks, verify everything is working correctly.
+
+### 1. Validate Environment Variables
+
+```bash
+python test_mcp_client.py
+```
+
+Expected:
+- MCP connects successfully
+- GitHub authentication works
+
+---
+
+### 2. Validate MCP Tools
+
+```bash
+python inspect_mcp_tools.py
+```
+
+Expected:
+- List of available GitHub tools
+- Confirms MCP server is working
+
+---
+
+### 3. Quick Test Prompt
+
+Run the agent and try:
+
+```
+List all repositories for my GitHub account
+```
+
+If this works → your setup is fully correct ✅
 
 ---
 
@@ -335,3 +475,12 @@ Give it a star ⭐ and share on LinkedIn 🚀
 ## 🙏 Acknowledgements
 
 This project was built with the help of AI-assisted development tools, including ChatGPT, for guidance, debugging, and code suggestions.
+
+---
+
+## 👨‍💻 Author
+
+Pavan Kalyan Pachuru
+
+- GitHub: https://github.com/iam-pavanpachuru
+- LinkedIn: https://www.linkedin.com/in/pavan-kalyan-pachuru-538a4016b
