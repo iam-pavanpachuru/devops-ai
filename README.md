@@ -474,12 +474,6 @@ Give it a star ⭐ and share on LinkedIn 🚀
 
 ---
 
-## 🙏 Acknowledgements
-
-This project was built with the help of AI-assisted development tools, including ChatGPT, for guidance, debugging, and code suggestions.
-
----
-
 ## 👨‍💻 Author
 
 Pavan Kalyan Pachuru
